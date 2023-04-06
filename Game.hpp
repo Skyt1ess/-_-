@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <windows.h>
 #include "PlayerRandom.hpp"
+#include "CheckPlayer.hpp"
 
 struct Game {
     vector<int> dx = {1, 1, 1, -1, -1, -1, 0, 0, 0};
@@ -47,11 +48,46 @@ struct Game {
 
     void game(IPlayer &p1, IPlayer &p2) {
         vector<vector<char>> field_p1, field_p2;
+        CheckPlayer c1, c2;
 
         field_p1 = p1.create();
         field_p2 = p2.create();
 
+        int f = 0;
+
+        if (c1.create(field_p1)) {
+            cout << "Field " << p1.team_name() << " OK" << endl;
+        } else {
+            cout << "Field " << p1.team_name() << " Error" << endl;
+            f++;
+        }
+
+        if (c2.create(field_p2)) {
+            cout << "Field " << p2.team_name() << " OK" << endl;
+        } else {
+            cout << "Field " << p2.team_name() << " Error" << endl;
+            f++;
+        }
+
+        cout << p1.team_name() << endl << endl;
+        print_field(field_p1);
+        cout << endl << endl << endl;
+        cout << p2.team_name() << endl << endl;
+        print_field(field_p2);
+
+        if (f) return;
+
         int turn = 0;
+        COORD coord;
+        coord.X = 0;
+        coord.Y = 0;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+        for (int i = 0; i < 100; i++)
+            cout << "                                                 " << endl;
+
+        coord.X = 0;
+        coord.Y = 0;
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 
 
         turn = rand() % 2;
@@ -66,7 +102,15 @@ struct Game {
 
             if (turn == 0) {
                 pair<int, int> shot = p1.shot();
+                if (!c1.shot(shot)) {
+                    cout << p1.team_name() << " bad shot " << shot.first << ' ' << shot.second << endl;
+                    return;
+                }
                 int res = p2.opponent_shot(shot);
+                if (!c2.opponent_shot(shot, res)) {
+                    cout << p2.team_name() << " bad opp shot " << shot.first << ' ' << shot.second  << ' ' << res << endl;
+                    return;
+                }
                 p1.get_shot_res(res);
                 if (res == 0) {
                     turn = 1;
@@ -83,7 +127,15 @@ struct Game {
                 }
             } else {
                 pair<int, int> shot = p2.shot();
+                if (!c2.shot(shot)) {
+                    cout << p2.team_name() << " bad shot " << shot.first << ' ' << shot.second << endl;
+                    return;
+                }
                 int res = p1.opponent_shot(shot);
+                if (!c1.opponent_shot(shot, res)) {
+                    cout << p1.team_name() << " bad opp shot " << shot.first << ' ' << shot.second  << ' ' << res << endl;
+                    return;
+                }
                 p2.get_shot_res(res);
                 if (res == 0) {
                     if (field_p1[shot.first][shot.second] == '.')
@@ -102,7 +154,7 @@ struct Game {
 
 
 
-            COORD coord;
+
             coord.X = 0;
             coord.Y = 0;
             SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
