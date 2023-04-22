@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include <windows.h>
 #include "PlayerRandom.hpp"
+#include "MyPlayer.hpp"
 #include "CheckPlayer.hpp"
 
 struct Game {

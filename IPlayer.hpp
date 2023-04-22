@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
-
+#ifndef IPLAYER_HPP_
+#define IPLAYER_HPP_
 
 using namespace std;
 
@@ -11,3 +12,5 @@ struct IPlayer {
     virtual void get_shot_res(int res) {};
     virtual string team_name() {};
 };
+
+#endif
