@@ -1,5 +1,7 @@
 #include <bits/stdc++.h>
 #include "Game.hpp"
+#include "PlayerRandom.hpp"
+#include "MyPlayer.hpp"
 
 int main() {
     MyPlayer p1;
